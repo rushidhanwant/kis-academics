@@ -5,7 +5,7 @@ import * as jwt2 from 'hapi-auth-jwt2'
 import * as swagger from 'hapi-swagger'
 import config from './config'
 import * as diagnostic from './diagnostic/router'
-
+import * as tutors from './tutors/router'
 export const init = async (): Promise<hapi.Server> => {
   // Hapi JS server initialization
   const server = hapi.server({
@@ -49,7 +49,8 @@ export const init = async (): Promise<hapi.Server> => {
   ])
 
   // initialize routers
-  diagnostic.register(server)
+  diagnostic.registerRoutes(server)
+  tutors.registerRoutes(server)
 
   await server.initialize()
   return server

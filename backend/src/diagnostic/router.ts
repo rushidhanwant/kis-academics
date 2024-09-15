@@ -1,6 +1,6 @@
 import * as hapi from '@hapi/hapi'
 
-export const register = (server: hapi.Server): void => {
+export const registerRoutes = (server: hapi.Server): void => {
   server.route({
     method: 'get',
     path: '/internal/ping',
