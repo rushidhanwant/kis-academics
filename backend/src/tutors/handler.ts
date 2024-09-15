@@ -33,3 +33,22 @@ export const handleGetTutorProfile = async (
   }
 }
 
+export const handleRequestTutor = async (
+  request: hapi.Request,
+  h: hapi.ResponseToolkit
+): Promise<hapi.ResponseObject> => {
+  try {
+    const { tutorId } = request.params as { tutorId: string }
+    const data = request.payload as { name: string; message: string }
+    const existing = await repo.getTutorById(tutorId)
+    if (isNil(existing)) {
+      return h.response({ error: 'tutor-not-found', message: 'Invalid ID' }).code(404)
+    }
+    console.log(`Tutor ${existing.first_name}(${existing.id})`)
+    console.log(`${data.name} : ${data.message}`)
+    return h.response('Request submitted').code(200)
+  } catch (err) {
+    console.error('Error requesting tutor:', err)
+    return h.response({ error: 'internal-server-error', message: 'An error occurred' }).code(500)
+  }
+}

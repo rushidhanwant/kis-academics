@@ -6,6 +6,15 @@ export const saveTutorSubjects = async (entity: TutorSubject[]): Promise<TutorSu
   return await db<TutorSubject>(tables.tutorsSubjects).insert(entity).returning('*')
 }
 
+export const getTutorById = async (id: string): Promise<Tutor | undefined> => {
+  try {
+    return await db(tables.tutors).select('*').where('id', id).first<Tutor>()
+  } catch (err) {
+    console.error('Failed to find tutor by ID:', err)
+    throw err
+  }
+}
+
 export const fetchTutorProfile = async (id: string): Promise<Tutor | undefined> => {
   try {
     return await db

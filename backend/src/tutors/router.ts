@@ -45,3 +45,25 @@ export const registerRoutes = (server: hapi.Server): void => {
     }
   })
 
+  server.route({
+    method: 'PUT',
+    path: '/tutors/{tutorId}/request',
+    options: {
+      handler: async (request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.ResponseObject> => {
+        try {
+          return await handler.handleRequestTutor(request, h)
+        } catch (err) {
+          console.error('API error:', request.url.href, err)
+          return h.response({ error: err }).code(400)
+        }
+      },
+      tags: ['api', 'tutors', 'request'],
+      validate: {
+        params: schema.profile,
+        payload: schema.request
+      },
+      description: 'Request tutor',
+      notes: 'Submit a request to a tutor by ID'
+    }
+  })
+}

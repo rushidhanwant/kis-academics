@@ -1,3 +1,4 @@
+import joi from 'joi'
 import { TutorSortOrder } from './types'
 
 export const search = joi
@@ -21,3 +22,8 @@ export const profile = joi
     tutor: joi.string().uuid().required()
   })
   .label('Tutor profile id')
+
+export const request = joi.object({
+  name: joi.string().required(),
+  message: joi.string().required()
+})
