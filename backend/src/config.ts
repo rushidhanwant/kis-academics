@@ -12,7 +12,13 @@ const config = {
 
 const dev = _.mergeRight(config, {
   db: {
-    url: process.env.DB_URL
+    url: process.env.DB
+  }
+})
+
+const test = _.mergeRight(config, {
+  db: {
+    url: process.env.DB_TEST
   }
 })
 

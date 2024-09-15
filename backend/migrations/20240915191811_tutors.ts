@@ -20,6 +20,18 @@ export async function up(knex: Knex): Promise<void> {
         postcode text
     );
 
+    create or replace
+    function public.update_updated_at()
+    returns trigger as
+    $$      
+    begin
+      new.updated_at = now();
+    return new;
+    end;
+    $$
+    language 'plpgsql';
+    
+
     create trigger tutors_updated
     before insert or update on public.tutors
     for each row execute procedure update_updated_at();

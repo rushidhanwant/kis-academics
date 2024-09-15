@@ -15,7 +15,8 @@
     "db:up": "npx knex migrate:up",
     "db:down": "npx knex migrate:down",
     "db:seed": "npx knex seed:run",
-    "prettier-fix": "npx prettier --write  src test"
+    "prettier-fix": "npx prettier --write  src test",
+    "setup": "cp .env.example .env && chmod +x ./scripts/setup_db.sh && ./scripts/setup_db.sh"
   },
   "eslintConfig": {
     "env": {
@@ -80,6 +81,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.574.0",
+    "@faker-js/faker": "^9.0.1",
     "@hapi/hapi": "^21.3.9",
     "@hapi/inert": "7.0.0",
     "@hapi/vision": "7.0.0",

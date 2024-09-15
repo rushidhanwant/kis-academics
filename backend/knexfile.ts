@@ -2,7 +2,8 @@
 import pgConnectionString from 'pg-connection-string'
 import config from './src/config'
 
-const connectionOptions = pgConnectionString.parse(config.db.url || '')
+const dbUrl = 'db' in config && 'url' in config.db ? config.db.url : undefined
+const connectionOptions = pgConnectionString.parse(dbUrl || process.env.DB_URL || '')
 
 module.exports = {
   client: 'pg',

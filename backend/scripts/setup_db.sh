@@ -1,4 +1,6 @@
+echo "Setting up database"
 psql -U postgres -f setup_db.sql
 
-# run all migrations
+echo "Running migrations"
 npm run db:migrate
+
