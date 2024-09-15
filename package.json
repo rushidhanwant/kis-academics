@@ -1,0 +1,12 @@
+{
+  "name": "kis-academics",
+  "private": "true",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/rushidhanwant/kis-academics.git",
+  "author": "rushikesh dhanwant <rushikeshdhanwant@gmail.com>",
+  "license": "MIT",
+  "workspaces": [
+    "backend"
+  ]
+}
