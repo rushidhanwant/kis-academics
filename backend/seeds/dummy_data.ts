@@ -51,12 +51,12 @@ export async function seed(knex: Knex): Promise<void> {
     'Statistics',
     'Law'
   ]
-  
+
   const shuffledSubjectNames = faker.helpers.shuffle(subjects).slice(0, 10)
 
   const subjectsResp = await Promise.all(
     shuffledSubjectNames.map(async (name) => {
-      const subject = await tutorRepo.save(
+      const subject = await tutorRepo.saveSubject(
         {
           name,
           curriculum: faker.helpers.arrayElement<Curriculum>([
