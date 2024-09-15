@@ -16,7 +16,7 @@
     "db:down": "npx knex migrate:down",
     "db:seed": "npx knex seed:run",
     "prettier-fix": "npx prettier --write  src test",
-    "setup": "cp .env.example .env && chmod +x ./scripts/setup_db.sh && ./scripts/setup_db.sh"
+    "setup": "cp .env.example .env && chmod +x ./scripts/setup_db.sh && ./scripts/setup_db.sh && npm run db:seed"
   },
   "eslintConfig": {
     "env": {
@@ -81,7 +81,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.574.0",
-    "@faker-js/faker": "^9.0.1",
+    "@faker-js/faker": "^8.0.0",
     "@hapi/hapi": "^21.3.9",
     "@hapi/inert": "7.0.0",
     "@hapi/vision": "7.0.0",
@@ -96,6 +96,7 @@
     "pg": "8.7.3",
     "pg-connection-string": "2.5.0",
     "ramda": "0.28.0",
+    "slugify": "^1.6.6",
     "ts-node": "10.9.1",
     "typedoc": "^0.23.10",
     "typescript": "4.7.4",

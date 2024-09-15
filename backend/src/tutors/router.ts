@@ -24,3 +24,24 @@ export const registerRoutes = (server: hapi.Server): void => {
     }
   })
 
+  server.route({
+    method: 'GET',
+    path: '/tutors/{tutorId}',
+    options: {
+      handler: async (request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.ResponseObject> => {
+        try {
+          return await handler.handleGetTutorProfile(request, h)
+        } catch (err) {
+          console.error('API error:', request.url.href, err)
+          return h.response({ error: err }).code(400)
+        }
+      },
+      tags: ['api', 'tutors', 'profile'],
+      validate: {
+        params: schema.profile
+      },
+      description: 'Get tutor profile',
+      notes: 'Retrieve tutor profile by ID'
+    }
+  })
+
