@@ -1,14 +1,14 @@
 import * as hapi from '@hapi/hapi'
 import { isNil } from 'ramda'
 import * as repo from './repo'
-import { SearchTutor } from './types'
+import { SearchTutorOptions } from './types'
 
 export const handleSearchTutors = async (
   request: hapi.Request,
   h: hapi.ResponseToolkit
 ): Promise<hapi.ResponseObject> => {
   try {
-    const result = await repo.findTutors(request.query as SearchTutor)
+    const result = await repo.findTutors(request.query as SearchTutorOptions)
     return h.response(result).code(200)
   } catch (err) {
     console.error('Error during tutor search:', err)

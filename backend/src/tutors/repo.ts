@@ -1,6 +1,6 @@
 import slugify from 'slugify'
 import db, { tables } from '../db/db'
-import { SaveTutor, SearchTutor, Tutor, TutorSortOrder, TutorSubject, SaveSubject, Subject } from './types'
+import { SaveTutor, SearchTutorOptions, Tutor, TutorSortOrder, TutorSubject, SaveSubject, Subject } from './types'
 
 export const saveTutorSubjects = async (entity: TutorSubject[]): Promise<TutorSubject[]> => {
   return await db<TutorSubject>(tables.tutorsSubjects).insert(entity).returning('*')
@@ -70,7 +70,7 @@ export const saveSubject = async (
     .then((rows) => rows[0])
 }
 
-export const findTutors = async (options: SearchTutor) => {
+export const findTutors = async (options: SearchTutorOptions) => {
   const limit = 15;
   const offset = options.page > 0 ? limit * (options.page - 1) : 0
   const query = db
@@ -88,17 +88,17 @@ export const findTutors = async (options: SearchTutor) => {
       this.whereILike('first_name', `%${options.query}%`).orWhereILike('last_name', `%${options.query}%`)
     })
   }
+  if (options.curriculum) {
+    query.andWhere('curriculum', '=', options.curriculum)
+  }
+  if (options.postcode) {
+    query.andWhere('postcode', '=', options.postcode)
+  }
   if (options.price) {
     query.andWhere('price', '=', options.price)
   }
   if (options.school) {
     query.andWhereILike('school', `%${options.school}%`)
-  }
-  if (options.postcode) {
-    query.andWhere('postcode', '=', options.postcode)
-  }
-  if (options.curriculum) {
-    query.andWhere('curriculum', '=', options.curriculum)
   }
   if (options.subject) {
     query.andWhereILike('subjects.name', `%${options.subject}%`)

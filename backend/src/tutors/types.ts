@@ -55,7 +55,7 @@ export interface SaveTutor {
   postcode: string
 }
 
-export interface SearchTutor {
+export interface SearchTutorOptions {
   query?: string
   price?: TutorPricing
   school?: string
