@@ -11,6 +11,10 @@
     "frontend"
   ],
   "scripts": {
-    "setup": "yarn workspace backend setup"
+    "setup": "yarn workspace backend setup && yarn workspace frontend setup",
+    "start": "concurrently \"yarn workspace backend start:dev\" \"yarn workspace frontend start\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
   }
 }
