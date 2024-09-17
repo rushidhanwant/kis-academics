@@ -16,7 +16,7 @@
     "db:down": "npx knex migrate:down",
     "db:seed": "npx knex seed:run",
     "prettier-fix": "npx prettier --write  src test",
-    "setup": "cp .env.example .env && chmod +x ./scripts/setup_db.sh && ./scripts/setup_db.sh && npm run db:seed"
+    "setup": "yarn install && cp .env.example .env && chmod +x ./scripts/setup_db.sh && ./scripts/setup_db.sh && npm run db:seed"
   },
   "eslintConfig": {
     "env": {
