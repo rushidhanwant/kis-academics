@@ -32,7 +32,7 @@ export const fetchTutorProfile = async (id: string): Promise<Tutor | undefined> 
 }
 
 export const addTutor = async (tutor: SaveTutor, knex = db): Promise<Tutor | undefined> => {
-  const slug = slugify(`${tutor.first_name} ${tutor.last_name}`, { replacement: '-', lower: true, strict: true })
+  const slug = slugify(`${tutor.first_name} ${tutor.last_name} `, { replacement: '-', lower: true, strict: true })
   const profilePic = `https://placehold.co/600x400?text=${tutor.first_name[0].toUpperCase()}${tutor.last_name[0].toUpperCase()}`
   try {
     const [newTutor] = await knex<Tutor>(tables.tutors)
@@ -73,39 +73,63 @@ export const saveSubject = async (
 export const findTutors = async (options: SearchTutorOptions) => {
   const limit = 15;
   const offset = options.page > 0 ? limit * (options.page - 1) : 0
-  const query = db
-    .select(`${tables.tutors}.*`)
+  
+  const baseQuery = db
     .from(tables.tutors)
     .leftJoin(tables.tutorsSubjects, `${tables.tutors}.id`, `${tables.tutorsSubjects}.tutor_id`)
     .leftJoin(tables.subjects, `${tables.tutorsSubjects}.subject_id`, `${tables.subjects}.id`)
-    .orderBy(...getOrderSequence(options.sort))
-    .groupBy(`${tables.tutors}.id`)
-    .limit(limit)
-    .offset(offset)
 
+  // Apply filters
   if (options.query) {
-    query.where(function () {
+    baseQuery.where(function () {
       this.whereILike('first_name', `%${options.query}%`).orWhereILike('last_name', `%${options.query}%`)
     })
   }
   if (options.curriculum) {
-    query.andWhere('curriculum', '=', options.curriculum)
+    baseQuery.andWhere('curriculum', '=', options.curriculum)
   }
   if (options.postcode) {
-    query.andWhere('postcode', '=', options.postcode)
+    baseQuery.andWhere('postcode', '=', options.postcode)
   }
   if (options.price) {
-    query.andWhere('price', '=', options.price)
+    baseQuery.andWhere('price', '=', options.price)
   }
   if (options.school) {
-    query.andWhereILike('school', `%${options.school}%`)
+    baseQuery.andWhereILike('school', `%${options.school}%`)
   }
   if (options.subject) {
-    query.andWhereILike('subjects.name', `%${options.subject}%`)
+    const subjects = JSON.parse(decodeURIComponent(options.subject));
+    for (const subject of subjects) {
+      baseQuery.orWhere('subjects.name', `${subject}`)
+    }
   }
 
+  // Clone the base query for the count
+  const countQuery = baseQuery.clone()
+    .select(`${tables.tutors}.*`)
+    .groupBy(`${tables.tutors}.id`);
+
+  // Modify the base query for fetching tutors
+  const tutorsQuery = baseQuery
+    .select(`${tables.tutors}.*`, db.raw(`jsonb_agg(${tables.subjects}.*) as subjects`))
+    .orderBy(...getOrderSequence(options.sort))
+    .groupBy(`${tables.tutors}.id`)
+    .limit(limit)
+    .offset(offset)
   try {
-    return await query
+    const [tutors, countResult] = await Promise.all([
+      tutorsQuery,
+      countQuery
+    ])
+
+    const total = countResult.length
+
+    return {
+      tutors,
+      total,
+      page: options.page,
+      totalPages: Math.ceil(total / limit)
+    }
   } catch (err) {
     console.error('Failed to search tutors:', err)
     throw err
