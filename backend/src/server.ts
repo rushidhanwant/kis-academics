@@ -2,6 +2,9 @@ import * as hapi from '@hapi/hapi'
 import config from './config'
 import * as diagnostic from './diagnostic/router'
 import * as tutors from './tutors/router'
+import * as inert from '@hapi/inert'
+import * as vision from '@hapi/vision'
+import * as swagger from 'hapi-swagger'
 export const init = async (): Promise<hapi.Server> => {
   // Hapi JS server initialization
   const server = hapi.server({
@@ -22,7 +25,24 @@ export const init = async (): Promise<hapi.Server> => {
       version: '0.0.1'
     },
     host: `${config.baseUrl}`,
+    securityDefinitions: {
+      jwt: {
+        type: 'apiKey',
+        name: 'Authorization',
+        in: 'header'
+      }
+    },
+    security: [{ jwt: [] }]
   }
+
+  await server.register([
+    inert,
+    vision,
+    {
+      plugin: swagger,
+      options: swaggerOptions
+    }
+  ])
 
   // initialize routers
   diagnostic.registerRoutes(server)
