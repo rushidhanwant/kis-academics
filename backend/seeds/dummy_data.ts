@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { Knex } from 'knex'
 import { TutorPricing, Curriculum } from '../src/tutors/types'
 import * as tutorRepo from '../src/tutors/repo'
+import { curriculums, pricing, schools, subjects } from '../utils/constants'
 
 export async function seed(knex: Knex): Promise<void> { 
     const tutorsResp = await Promise.all(
@@ -14,19 +15,8 @@ export async function seed(knex: Knex): Promise<void> {
               available: faker.helpers.arrayElement([true, false]),
               bio: faker.lorem.sentences(10),
               postcode: faker.location.zipCode(),
-              price: faker.helpers.arrayElement<TutorPricing>(['gold', 'platinum', 'executive']),
-              school: faker.helpers.arrayElement<string>([
-                'Oxford',
-                'Stanford',
-                'MIT',
-                'Yale',
-                'Princeton',
-                'UCLA',
-                'University of Tokyo',
-                'University of Toronto',
-                'ETH Zurich',
-                'Imperial College London'
-              ])
+              price: faker.helpers.arrayElement<TutorPricing>(pricing as TutorPricing[]),
+              school: faker.helpers.arrayElement<string>(schools as string[])
             },
             knex
           )
@@ -34,38 +24,15 @@ export async function seed(knex: Knex): Promise<void> {
         })
       )
 
-  const subjects = [
-    'Astronomy',
-    'Maths',
-    'Science',
-    'Sociology',
-    'Psychology',
-    'Anthropology',
-    'Political Science',
-    'Linguistics',
-    'Literature',
-    'Art History',
-    'Computer Science',
-    'Engineering',
-    'Environmental Science',
-    'Statistics',
-    'Law'
-  ]
 
-  const shuffledSubjectNames = faker.helpers.shuffle(subjects).slice(0, 10)
+  const shuffledSubjectNames = faker.helpers.shuffle(subjects).slice(0, 15)
 
   const subjectsResp = await Promise.all(
     shuffledSubjectNames.map(async (name) => {
       const subject = await tutorRepo.saveSubject(
         {
           name,
-          curriculum: faker.helpers.arrayElement<Curriculum>([
-            'VCE',
-            'WACE',
-            'HSC',
-            'QCE',
-            'IB'
-          ]),
+          curriculum: faker.helpers.arrayElement<Curriculum>(curriculums as Curriculum[]),
         },
         knex
       )
