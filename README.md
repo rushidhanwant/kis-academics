@@ -23,6 +23,7 @@
         2. Profile interface:
             - Tutor information
             - Contact section
+            - Mobile Responsive
 2. Pending
 
     - None, as per the assignment requirements.
