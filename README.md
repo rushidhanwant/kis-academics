@@ -19,6 +19,7 @@
             - Tutor card
             - Filters
             - Pagination
+            - Mobile Responsive
         2. Profile interface:
             - Tutor information
             - Contact section
